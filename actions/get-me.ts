@@ -1,9 +1,10 @@
 import { and, eq, isNull } from "drizzle-orm";
-import { db } from "./drizzle";
-import { users } from "./schema";
+import { db } from "@/lib/db/drizzle";
+import { users } from "@/lib/db/schema";
 import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/auth/session";
 
+// Obtener el usuario actual
 export async function getUser() {
   const sessionCookie = cookies().get("session");
   if (!sessionCookie || !sessionCookie.value) {
