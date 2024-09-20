@@ -8,7 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 // import { relations } from "drizzle-orm";
 
-export const users = pgTable("test_users", {
+export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 100 }),
   email: varchar("email", { length: 255 }).notNull().unique(),
@@ -20,3 +20,4 @@ export const users = pgTable("test_users", {
 });
 
 export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;

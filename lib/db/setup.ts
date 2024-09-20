@@ -1,12 +1,7 @@
-import { exec } from "node:child_process";
 import { promises as fs } from "node:fs";
-import { promisify } from "node:util";
 import readline from "node:readline";
 import crypto from "node:crypto";
 import path from "node:path";
-import os from "node:os";
-
-const execAsync = promisify(exec);
 
 function question(query: string): Promise<string> {
   const rl = readline.createInterface({
@@ -23,56 +18,48 @@ function question(query: string): Promise<string> {
 }
 
 async function getPostgresURL(): Promise<string> {
-  console.log("Step 1: Setting up Postgres");
+  console.log("Paso 1: Configuración de Postgres");
   const dbChoice = await question(
-    "Do you want to use a local Postgres instance with Docker (L) or a remote Postgres instance (R)? (L/R): "
+    "Debes utilizar una instancia remota de Postgres, ¿Ya tienes tu string de conexión?(y/n):"
   );
 
-  if (dbChoice.toLowerCase() === "l") {
-    console.log("Setting up local Postgres instance with Docker...");
-    //   await setupLocalPostgres();
-    return "postgres://postgres:postgres@localhost:54322/postgres";
+  if (dbChoice.toLowerCase() === "y") {
+    return await question("Ingresa tu POSTGRES_URL: ");
   } else {
     console.log(
-      "You can find Postgres databases at: https://vercel.com/marketplace?category=databases"
+      "Te recomendamos utilizar una instancia de Postgres en la nube. como AWS RDS, Google Cloud SQL, Azure, Neon Tech, etc."
     );
-    return await question("Enter your POSTGRES_URL: ");
+    process.exit(1);
   }
 }
 
 function generateAuthSecret(): string {
-  console.log("Step 5: Generating AUTH_SECRET...");
+  console.log("Paso 2: Gerando AUTH_SECRET...");
   return crypto.randomBytes(32).toString("hex");
 }
 
 async function writeEnvFile(envVars: Record<string, string>) {
-  console.log("Step 6: Writing environment variables to .env");
+  console.log("Paso 3: Escribiendo variables de entorno en .env...");
   const envContent = Object.entries(envVars)
     .map(([key, value]) => `${key}=${value}`)
     .join("\n");
 
   await fs.writeFile(path.join(process.cwd(), ".env"), envContent);
-  console.log(".env file created with the necessary variables.");
+  console.log(".env archivo creado con las variables necesarias.");
 }
 
 async function main() {
-  //   await checkStripeCLI();
-
   const POSTGRES_URL = await getPostgresURL();
-  // const STRIPE_SECRET_KEY = await getStripeSecretKey();
-  // const STRIPE_WEBHOOK_SECRET = await createStripeWebhook();
   const BASE_URL = "http://localhost:3000";
   const AUTH_SECRET = generateAuthSecret();
 
   await writeEnvFile({
     POSTGRES_URL,
-    //   STRIPE_SECRET_KEY,
-    //   STRIPE_WEBHOOK_SECRET,
     BASE_URL,
     AUTH_SECRET,
   });
 
-  console.log("🎉 Setup completed successfully!");
+  console.log("🎉 Instalación completada con éxito!");
 }
 
 main().catch(console.error);
