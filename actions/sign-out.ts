@@ -3,5 +3,5 @@
 import { cookies } from "next/headers";
 
 export async function signOut() {
-  cookies().delete("session");
+  cookies().delete("AUTH_SESSION_JOTREDEV");
 }

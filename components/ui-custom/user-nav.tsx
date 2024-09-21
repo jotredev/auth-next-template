@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -17,22 +18,35 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { LoaderComponent } from "@/components/ui-custom/loader";
+import { LogOut, Settings, User } from "lucide-react";
 
 export const UserNav = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
   const { auth, setAuth } = useAuth();
 
   async function handleSignOut() {
+    setIsLoading(true);
     setAuth(null);
     await signOut();
-    router.push("/");
+    router.push("/auth/login");
+
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
   }
+
+  if (isLoading) return <LoaderComponent />;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="py-2 px-2 items-center gap-3">
-          <Avatar className="h-8 w-8">
+        <Button
+          variant="ghost"
+          className="hover:bg-transparent py-2 px-2 flex items-center gap-3"
+        >
+          <Avatar className="h-9 w-9">
             <AvatarImage
               src="/avatar.png"
               className="object-cover"
@@ -43,10 +57,6 @@ export const UserNav = () => {
               {auth?.name?.charAt(1)}
             </AvatarFallback>
           </Avatar>
-          <div className="text-left">
-            <p className="font-medium">{auth?.name}</p>
-            <p className="text-xs text-muted-foreground">{auth?.email}</p>
-          </div>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
@@ -62,18 +72,18 @@ export const UserNav = () => {
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
             <Link href="/profile">
-              <i className="fi fi-rr-user mr-2"></i>
+              <User className="mr-2 h-4 w-4" />
               <span>Perfil</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <i className="fi fi-rr-settings mr-2"></i>
+            <Settings className="mr-2 h-4 w-4" />
             <span>Ajustes</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut}>
-          <i className="fi fi-rr-exit mr-2"></i>
+          <LogOut className="mr-2 h-4 w-4" />
           <span>Cerrar sesión</span>
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -14,7 +14,7 @@ async function seed() {
         name: "Admin",
         email: email,
         password: passwordHash,
-        role: "owner",
+        role: "admin",
       },
     ])
     .returning();

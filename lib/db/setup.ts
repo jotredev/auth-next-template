@@ -27,7 +27,7 @@ async function getPostgresURL(): Promise<string> {
     return await question("Ingresa tu POSTGRES_URL: ");
   } else {
     console.log(
-      "Te recomendamos utilizar una instancia de Postgres en la nube. como AWS RDS, Google Cloud SQL, Azure, Neon Tech, etc."
+      "Te recomendamos utilizar una instancia de Postgres en la nube. como Neon Tech, https://neon.tech/home"
     );
     process.exit(1);
   }
