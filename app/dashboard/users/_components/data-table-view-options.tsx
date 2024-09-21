@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
-
 import { Table } from "@tanstack/react-table";
+import { useModal } from "@/hooks/use-modal";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +22,8 @@ interface DataTableViewOptionsProps<TData> {
 export function DataTableViewOptions<TData>({
   table,
 }: DataTableViewOptionsProps<TData>) {
+  const { onOpen } = useModal();
+
   return (
     <div className="flex items-center gap-2">
       <DropdownMenu>
@@ -55,11 +56,9 @@ export function DataTableViewOptions<TData>({
             })}
         </DropdownMenuContent>
       </DropdownMenu>
-      <Button asChild>
-        <Link href="/users/new">
-          <CirclePlus className="w-4 h-4 mr-2" />
-          <span>Agregar nuevo usuario</span>
-        </Link>
+      <Button onClick={onOpen}>
+        <CirclePlus className="w-4 h-4 mr-2" />
+        <span>Agregar nuevo usuario</span>
       </Button>
     </div>
   );

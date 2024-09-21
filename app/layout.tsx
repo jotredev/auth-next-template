@@ -6,6 +6,8 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import { getUser } from "@/actions/get-me";
 import { Toaster } from "@/components/ui/sonner";
 import NextTopLoader from "nextjs-toploader";
+import { ModalProvider } from "@/providers/modal-provider";
+import { Modals } from "@/components/ui-custom/modals/modals";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -36,16 +38,19 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider userPromise={userPromise}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-            <NextTopLoader showSpinner={false} />
-            <Toaster />
-          </ThemeProvider>
+          <ModalProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+              <Modals />
+              <NextTopLoader showSpinner={false} />
+              <Toaster />
+            </ThemeProvider>
+          </ModalProvider>
         </AuthProvider>
       </body>
     </html>

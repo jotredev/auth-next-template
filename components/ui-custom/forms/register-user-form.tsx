@@ -8,7 +8,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
 
-import { signUp } from "@/actions/sign-up";
+import { useModal } from "@/hooks/use-modal";
+
+import { registerUser } from "@/actions/register-user";
 import { formSchemaRegister } from "@/types/user";
 
 import { Button } from "@/components/ui/button";
@@ -23,8 +25,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Loader } from "lucide-react";
 
-export const FormRegister = () => {
+interface RegisterUserFormProps {
+  fromPage: string;
+}
+
+export const RegisterUserForm = ({ fromPage }: RegisterUserFormProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { onClose } = useModal();
 
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchemaRegister>>({
@@ -38,10 +45,19 @@ export const FormRegister = () => {
 
   async function onSubmit(values: z.infer<typeof formSchemaRegister>) {
     setIsLoading(true);
-    const res = await signUp(values);
+    const res = await registerUser({
+      values,
+      isAuth: fromPage === "auth-register" ? true : false,
+    });
 
     if (res?.response === "success") {
-      router.push("/dashboard");
+      if (fromPage === "auth-register") {
+        router.push("/dashboard");
+      } else {
+        router.refresh();
+        toast.success(res?.message);
+        onClose();
+      }
     } else {
       toast.error(res?.message);
     }
@@ -109,7 +125,7 @@ export const FormRegister = () => {
         />
         <Button type="submit" className="w-full" disabled={isLoading}>
           {isLoading && <Loader className="w-4 h-4 mr-3 animate-spin" />}
-          Ingresar
+          {fromPage === "auth-register" ? "Registrarse" : "Registrar usuario"}
         </Button>
       </form>
     </Form>

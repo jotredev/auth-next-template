@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { User } from "@/lib/db/schema";
 
-import { BookUser, Ellipsis, Pencil, Trash2 } from "lucide-react";
+import { Ellipsis, Pencil, Trash2 } from "lucide-react";
 
 interface DataTableRowActionsProps {
   data: User;
@@ -33,13 +33,6 @@ export function DataTableRowActions({ data }: DataTableRowActionsProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem
-          onClick={() => router.push(`/users/${data.id}`)}
-          className="items-center gap-2"
-        >
-          <BookUser className="w-4 h-4 mr-2" />
-          Detalles
-        </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => router.push(`/users/${data.id}/edit`)}
           className="items-center gap-2"
