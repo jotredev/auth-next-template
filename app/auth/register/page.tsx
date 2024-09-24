@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { FormRegister } from "./_components/form-register";
+
+import { RegisterUserForm } from "@/components/ui-custom/forms/register-user-form";
 
 const RegisterPage = () => {
   return (
@@ -8,7 +9,7 @@ const RegisterPage = () => {
         Registrarse
       </h1>
       <div className="w-full">
-        <FormRegister />
+        <RegisterUserForm fromPage="auth-register" />
       </div>
       <div className="mt-5">
         <p className="text-center text-muted-foreground">

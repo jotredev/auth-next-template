@@ -34,7 +34,7 @@ export const signIn = async (values: z.infer<typeof formSchemaLogin>) => {
     }
 
     await setSession(user[0]);
-    return { response: "success", messahe: "Inicio de sesión correcto" };
+    return { response: "success", message: "Inicio de sesión correcto" };
   } catch (error) {
     return { response: "error", message: `Ha ocurrido un error: ${error}` };
   }

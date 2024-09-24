@@ -9,7 +9,12 @@ import { hashPassword, setSession } from "@/lib/auth/session";
 
 import { formSchemaRegister } from "@/types/user";
 
-export const signUp = async (values: z.infer<typeof formSchemaRegister>) => {
+interface RegisterUserProps {
+  values: z.infer<typeof formSchemaRegister>;
+  isAuth: boolean;
+}
+
+export const registerUser = async ({ values, isAuth }: RegisterUserProps) => {
   try {
     const { name, email, password } = values;
 
@@ -44,8 +49,11 @@ export const signUp = async (values: z.infer<typeof formSchemaRegister>) => {
       };
     }
 
-    await setSession(createdUser);
-    return { response: "success", messahe: "Cuenta creada correctamente" };
+    if (isAuth) {
+      await setSession(createdUser);
+    }
+
+    return { response: "success", message: "Usuario registrado" };
   } catch (error) {
     return { response: "error", message: `Ha ocurrido un error: ${error}` };
   }

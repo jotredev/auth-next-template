@@ -8,13 +8,14 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
 
-import { signUp } from "@/actions/sign-up";
-import { formSchemaRegister } from "@/types/user";
+import { editUser } from "@/actions/edit-user";
+import { formSchemaEditUser } from "@/types/user";
 
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -22,26 +23,32 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Loader } from "lucide-react";
+import { User } from "@/lib/db/schema";
 
-export const FormRegister = () => {
+interface EditUserFormProps {
+  data: User;
+}
+
+export const EditUserForm = ({ data }: EditUserFormProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const router = useRouter();
-  const form = useForm<z.infer<typeof formSchemaRegister>>({
-    resolver: zodResolver(formSchemaRegister),
+  const form = useForm<z.infer<typeof formSchemaEditUser>>({
+    resolver: zodResolver(formSchemaEditUser),
     defaultValues: {
-      name: "",
-      email: "",
+      name: data.name!,
+      email: data.email!,
       password: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchemaRegister>) {
+  async function onSubmit(values: z.infer<typeof formSchemaEditUser>) {
     setIsLoading(true);
-    const res = await signUp(values);
+    const res = await editUser({ values, id: data.id });
 
     if (res?.response === "success") {
-      router.push("/dashboard");
+      router.refresh();
+      toast.success(res?.message);
     } else {
       toast.error(res?.message);
     }
@@ -103,13 +110,16 @@ export const FormRegister = () => {
                   {...field}
                 />
               </FormControl>
+              <FormDescription>
+                Si no deseas cambiar la contraseña, deja este campo vacío.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={isLoading}>
+        <Button type="submit" disabled={isLoading}>
           {isLoading && <Loader className="w-4 h-4 mr-3 animate-spin" />}
-          Ingresar
+          Editar usuario
         </Button>
       </form>
     </Form>

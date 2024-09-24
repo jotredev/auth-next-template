@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useState } from "react";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -12,47 +13,53 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { User } from "@/lib/db/schema";
 
-import { BookUser, Ellipsis, Pencil, Trash2 } from "lucide-react";
+import { Ellipsis, Pencil, Trash2 } from "lucide-react";
+import { DeleteUserModal } from "@/components/ui-custom/modals/delete-user-modal";
 
 interface DataTableRowActionsProps {
   data: User;
 }
 
 export function DataTableRowActions({ data }: DataTableRowActionsProps) {
-  const router = useRouter();
+  const [openModalDeleteUser, setOpenModalDeleteUser] = useState(false);
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
-        >
-          <Ellipsis className="h-4 w-4" />
-          <span className="sr-only">Abrir menu</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem
-          onClick={() => router.push(`/users/${data.id}`)}
-          className="items-center gap-2"
-        >
-          <BookUser className="w-4 h-4 mr-2" />
-          Detalles
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => router.push(`/users/${data.id}/edit`)}
-          className="items-center gap-2"
-        >
-          <Pencil className="w-4 h-4 mr-2" />
-          Editar
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="items-center gap-2">
-          <Trash2 className="w-4 h-4 mr-2" />
-          Eliminar
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+          >
+            <Ellipsis className="h-4 w-4" />
+            <span className="sr-only">Abrir menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-[160px]">
+          <DropdownMenuItem asChild>
+            <Link
+              href={`/dashboard/users/${data.id}`}
+              className="items-center gap-2"
+            >
+              <Pencil className="w-4 h-4 mr-2" />
+              Editar
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => setOpenModalDeleteUser(true)}
+            className="items-center gap-2"
+          >
+            <Trash2 className="w-4 h-4 mr-2" />
+            Eliminar
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <DeleteUserModal
+        isOpen={openModalDeleteUser}
+        onClose={setOpenModalDeleteUser}
+        user={data}
+      />
+    </>
   );
 }
