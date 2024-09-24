@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { RegisterUserForm } from "@/components/ui-custom/forms/register-user-form";
 
-export const DialogRegisterUser = () => {
+export const ModalRegisterUser = () => {
   const { isOpen, onClose } = useModal();
 
   return (

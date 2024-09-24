@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,8 +19,6 @@ interface DataTableRowActionsProps {
 }
 
 export function DataTableRowActions({ data }: DataTableRowActionsProps) {
-  const router = useRouter();
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -33,12 +31,14 @@ export function DataTableRowActions({ data }: DataTableRowActionsProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem
-          onClick={() => router.push(`/users/${data.id}/edit`)}
-          className="items-center gap-2"
-        >
-          <Pencil className="w-4 h-4 mr-2" />
-          Editar
+        <DropdownMenuItem asChild>
+          <Link
+            href={`/dashboard/users/${data.id}`}
+            className="items-center gap-2"
+          >
+            <Pencil className="w-4 h-4 mr-2" />
+            Editar
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="items-center gap-2">

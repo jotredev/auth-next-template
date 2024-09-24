@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DialogRegisterUser } from "./register-user-dialog";
+import { ModalRegisterUser } from "./register-user-modal";
 
 export const Modals = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -16,7 +16,7 @@ export const Modals = () => {
 
   return (
     <>
-      <DialogRegisterUser />
+      <ModalRegisterUser />
     </>
   );
 };
