@@ -1,14 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
-
-import { useModal } from "@/hooks/use-modal";
 
 import { registerUser } from "@/actions/register-user";
 import { formSchemaRegister } from "@/types/user";
@@ -27,11 +25,14 @@ import { Loader } from "lucide-react";
 
 interface RegisterUserFormProps {
   fromPage: string;
+  onCloseModal?: Dispatch<SetStateAction<boolean>>;
 }
 
-export const RegisterUserForm = ({ fromPage }: RegisterUserFormProps) => {
+export const RegisterUserForm = ({
+  fromPage,
+  onCloseModal,
+}: RegisterUserFormProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { onClose } = useModal();
 
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchemaRegister>>({
@@ -56,7 +57,9 @@ export const RegisterUserForm = ({ fromPage }: RegisterUserFormProps) => {
       } else {
         router.refresh();
         toast.success(res?.message);
-        onClose();
+        if (onCloseModal) {
+          onCloseModal(false);
+        }
       }
     } else {
       toast.error(res?.message);
